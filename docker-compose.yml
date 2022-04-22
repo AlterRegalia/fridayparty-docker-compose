@@ -1,0 +1,33 @@
+version: '3'
+services:
+  # fridayparty fe service
+  fridayparty-fe:
+    image: fridayparty/client:latest
+    networks:
+      - fridayparty-network
+    expose:
+      - 3000
+
+  # fridayparty api service
+  fridayparty-api:
+    image: fridayparty/api:latest
+    networks:
+      - fridayparty-network
+    expose:
+      - 5000
+
+  # nginx proxy service
+  webserver:
+    image: fridayparty/proxy:latest
+    restart: always
+    depends_on:
+      - fridayparty-fe
+      - fridayparty-api
+    networks:
+      - fridayparty-network
+    ports:
+      - 80:80
+      - 443:443
+
+networks:
+  fridayparty-network:
